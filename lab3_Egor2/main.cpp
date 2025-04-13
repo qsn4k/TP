@@ -1,7 +1,7 @@
 #include <windows.h>
 #include <tchar.h>
 #include <stdio.h>
-//egor good blowjob
+
 // Прототипы функций
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
 void CreateControls(HWND hwnd);
