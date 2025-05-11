@@ -67,7 +67,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
     switch (message)
     {
     case WM_CREATE:
-        CreateControls(hWnd);
+        CreateContr
+            ols(hWnd);
         break;
 
     case WM_COMMAND:

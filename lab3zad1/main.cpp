@@ -5,7 +5,7 @@ LRESULT CALLBACK WindowProcess(HWND, UINT, WPARAM, LPARAM);
 
 // Точка входа Windows-приложения
 int WINAPI WinMain(HINSTANCE hInst,      // Дескриптор экземпляра приложения
-    HINSTANCE hPrevInst,                // Не используется (устаревший параметр)
+    HINSTANCE hPrevInst,                
     LPSTR pCommandLine,                // Командная строка
     int nCommandShow)                  // Способ отображения окна
 {
