@@ -59,5 +59,8 @@
     <Image Include="res\MFC_Laba_5.ico">
       <Filter>Файлы ресурсов</Filter>
     </Image>
+    <Image Include="res\bitmap1.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
   </ItemGroup>
 </Project>

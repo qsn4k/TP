@@ -52,6 +52,8 @@ END_MESSAGE_MAP()
 
 CMainDlg::CMainDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFC_LABA_5_DIALOG, pParent)
+	, m_sFileIn(_T(""))
+	, m_sFileOut(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -59,12 +61,17 @@ CMainDlg::CMainDlg(CWnd* pParent /*=nullptr*/)
 void CMainDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_EDIT_FILEIN, m_sFileIn);
+	DDX_Text(pDX, IDC_EDIT_FILEOUT, m_sFileOut);
 }
 
 BEGIN_MESSAGE_MAP(CMainDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_BTN_GETFILEIN, &CMainDlg::OnGetFileIn)
+	ON_BN_CLICKED(IDC_BTN_GETFILEOUT, &CMainDlg::OnGetFileOut)
+	ON_BN_CLICKED(IDC_BTN_PROCESS, &CMainDlg::OnProcess)
 END_MESSAGE_MAP()
 
 
@@ -93,6 +100,16 @@ BOOL CMainDlg::OnInitDialog()
 			pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
 		}
 	}
+
+
+
+	m_sFileIn = "input.txt";	//присвоили значение переменной
+	UpdateData(FALSE);	//ввели значение переменной в элемент 
+	// управления для отображения на экране
+
+	m_sFileOut = "output.txt";	//присвоили значение переменной
+	UpdateData(FALSE);		//ввели значение переменной в элемент 
+	// управления для отображения на экране
 
 	// Задает значок для этого диалогового окна.  Среда делает это автоматически,
 	//  если главное окно приложения не является диалоговым
@@ -153,3 +170,63 @@ HCURSOR CMainDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+void CMainDlg::OnGetFileIn()
+{
+	CFileDialog dlg(TRUE);
+	dlg.m_ofn.lpstrFile;
+	if (dlg.DoModal() == IDOK)
+	{
+		m_sFileIn = dlg.m_ofn.lpstrFile;
+		UpdateData(FALSE);
+	}
+}
+
+void CMainDlg::OnGetFileOut()
+{
+	CFileDialog dlg(FALSE);
+	if (dlg.DoModal() == IDOK)
+	{
+		m_sFileOut = dlg.m_ofn.lpstrFile;
+		UpdateData(FALSE);
+	}
+}
+
+void CMainDlg::OnProcess()
+{
+	UpdateData(TRUE);
+	if (ProcessFiles(m_sFileIn, m_sFileOut) != TRUE)
+	{
+		MessageBox(_T("Обработка файлов завершилась с ошибкой"), _T("Ошибка"), MB_OK | MB_ICONERROR);
+	}
+	else
+	{
+		MessageBox(_T("Файлы обработаны успешно"), _T("Информация"), MB_OK | MB_ICONINFORMATION);
+	}
+
+}
+
+bool CMainDlg::ProcessFiles(CString sFileIn, CString sFileOut)
+{
+	CFile fileIn;
+	if (fileIn.Open(sFileIn, CFile::modeRead) == FALSE)
+	{
+		CString sMsg;
+		sMsg.Format(_T("Не могу открыть файл %s"), sFileIn);
+		MessageBox(sMsg, _T("Ошибка"), MB_OK | MB_ICONERROR);
+		return FALSE;
+	}
+	CFile fileOut;
+	if (!fileOut.Open(sFileOut, CFile::modeWrite | CFile::modeCreate))
+	{
+		CString sMsg;
+		sMsg.Format(_T("Не могу открыть файл результата %s"), sFileOut);
+		MessageBox(sMsg, _T("Ошибка"), MB_OK | MB_ICONERROR);
+		return FALSE;
+	}
+	char a[14];
+	fileIn.Read(&a, sizeof(a));
+	fileOut.Write(&a, sizeof(a));
+	return TRUE;
+
+}
